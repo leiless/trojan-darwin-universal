@@ -28,8 +28,8 @@ jobs:
         xcode-select -p
         xcodebuild -version
         brew -v
-        curl -4L https://icanhazip.com
-        ipconfig
+        curl -4sL https://icanhazip.com
+        ifconfig
 
         # Hack macOS 10.x to allow arm64* build support
         if [ "$(sw_vers -productVersion | cut -d'.' -f1)" = 10 ]; then
