@@ -27,6 +27,7 @@ jobs:
         uname -a
         xcode-select -p
         xcodebuild -version
+        brew -v
 
         # Hack macOS 10.x to allow arm64* build support
         if [ "$(sw_vers -productVersion | cut -d'.' -f1)" = 10 ]; then
