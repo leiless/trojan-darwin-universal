@@ -23,5 +23,7 @@ jobs:
         sysctl -n hw.ncpu
         sw_vers
         uname -a
+        xcode-select -p
+        xcodebuild -version
         env
 
