@@ -1,0 +1,27 @@
+name: macOS trojan-gfw auto build
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**.yml'
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    branches: [ main ]
+
+jobs:
+  build-on-darwin:
+    name: Build on Darwin
+    runs-on: macos-11.0
+    steps:
+
+    - name: Setup build environment
+      run: |
+        set -eufx
+        sysctl -n machdep.cpu.brand_string
+        sysctl -n hw.ncpu
+        sw_vers
+        uname -a
+        env
+
