@@ -27,7 +27,7 @@ jobs:
         xcode-select -p
         xcodebuild -version
         pushd /tmp
-        echo I2luY2x1ZGUgPHN0ZGlvLmg+CmludCBtYWluKHZvaWQpIHsKICAgIHB1dHMoIkhlbGxvIHdvcmxkISIpOwogICAgcmV0dXJuIDA7Cn0K > hello.c
+        echo I2luY2x1ZGUgPHN0ZGlvLmg+CmludCBtYWluKHZvaWQpIHsKICAgIHB1dHMoIkhlbGxvIHdvcmxkISIpOwogICAgcmV0dXJuIDA7Cn0K | base64 -d > hello.c
         gcc -Wall -Wextra -arch x86_64 -arch arm64 hello.c -o hello
         file -b hello
         ./hello
