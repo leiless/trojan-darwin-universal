@@ -43,8 +43,8 @@ jobs:
 
         mkdir /tmp/trojan-darwin-universal
         pushd /tmp/trojan-darwin-universal
-        curl -4sL https://formulae.brew.sh/api/formula/openssl@1.1.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget
-        curl -4sL https://formulae.brew.sh/api/formula/boost.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget
+        curl -4sL https://formulae.brew.sh/api/formula/openssl@1.1.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget -q
+        curl -4sL https://formulae.brew.sh/api/formula/boost.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget -q
         popd
 
         pushd /tmp
