@@ -19,11 +19,17 @@ jobs:
     - name: Setup build environment
       run: |
         set -eufx
+        echo $0
         sysctl -n machdep.cpu.brand_string
         sysctl -n hw.ncpu
         sw_vers
         uname -a
         xcode-select -p
         xcodebuild -version
-        env
+        pushd /tmp
+        echo I2luY2x1ZGUgPHN0ZGlvLmg+CmludCBtYWluKHZvaWQpIHsKICAgIHB1dHMoIkhlbGxvIHdvcmxkISIpOwogICAgcmV0dXJuIDA7Cn0K > hello.c
+        gcc -Wall -Wextra -arch x86_64 -arch arm64 hello.c -o hello
+        file -b hello
+        ./hello
+        popd
 
