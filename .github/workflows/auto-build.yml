@@ -30,6 +30,7 @@ jobs:
         pushd /Library/Developer/CommandLineTools/SDKs
         sudo rm MacOSX.sdk
         sudo ln -s MacOSX11.1.sdk MacOSX.sdk
+        sudo rm -rf MacOSX10.15.sdk
         ls -l
         popd
         pushd /tmp
