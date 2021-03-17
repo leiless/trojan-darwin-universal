@@ -28,8 +28,8 @@ jobs:
         xcode-select -p
         xcodebuild -version
         brew -v
-        curl -4sL https://icanhazip.com
-        ifconfig
+
+        command -v cmake make > /dev/null
 
         # Hack macOS 10.x to allow arm64* build support
         if [ "$(sw_vers -productVersion | cut -d'.' -f1)" = 10 ]; then
@@ -41,7 +41,6 @@ jobs:
           popd
         fi
 
-        brew install cmake
         mkdir /tmp/trojan-darwin-universal
         pushd /tmp/trojan-darwin-universal
         curl -4sL https://formulae.brew.sh/api/formula/openssl@1.1.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget
