@@ -31,6 +31,8 @@ jobs:
 
         command -v cmake make > /dev/null
 
+        brew install tree
+
         # Hack macOS 10.x to allow arm64* build support
         if [ "$(sw_vers -productVersion | cut -d'.' -f1)" = 10 ]; then
           pushd /Library/Developer/CommandLineTools/SDKs
@@ -44,6 +46,16 @@ jobs:
         mkdir /tmp/trojan-darwin-universal
         pushd /tmp/trojan-darwin-universal
         curl -4sL https://formulae.brew.sh/api/formula/openssl@1.1.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget -q
+        mkdir openssl_x86_64 openssl_arm64
+        set +f
+        ls -1 openssl*.tar.gz | grep arm64 | xargs -I{} tar xf '{}' -C openssl_arm64
+        ls -1 openssl*.tar.gz | grep -v arm64 | xargs -I{} tar xf '{}' -C openssl_x86_64
+        set -f
         curl -4sL https://formulae.brew.sh/api/formula/boost.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget -q
+        mkdir boost_x86_64 boost_arm64
+        set +f
+        ls -1 boost*.tar.gz | grep arm64 | xargs -I{} tar xf '{}' -C boost_arm64
+        ls -1 boost*.tar.gz | grep -v arm64 | xargs -I{} tar xf '{}' -C boost_x86_64
+        set -f
+        tree -L 4
         popd
-
