@@ -19,15 +19,15 @@ jobs:
     - name: Setup build environment
       run: |
         set -eufx
-        echo $0
-        whoami
-        sysctl -n machdep.cpu.brand_string
-        sysctl -n hw.ncpu
-        sw_vers
-        uname -a
-        xcode-select -p
-        xcodebuild -version
-        brew -v
+        #echo $0
+        #whoami
+        #sysctl -n machdep.cpu.brand_string
+        #sysctl -n hw.ncpu
+        #sw_vers
+        #uname -a
+        #xcode-select -p
+        #xcodebuild -version
+        #brew -v
 
         command -v cmake make > /dev/null
 
@@ -45,13 +45,5 @@ jobs:
         pushd /tmp/trojan-darwin-universal
         curl -4sL https://formulae.brew.sh/api/formula/openssl@1.1.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget -q
         curl -4sL https://formulae.brew.sh/api/formula/boost.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget -q
-        popd
-
-        pushd /tmp
-        echo I2luY2x1ZGUgPHN0ZGlvLmg+CmludCBtYWluKHZvaWQpIHsKICAgIHB1dHMoIkhlbGxvIHdvcmxkISIpOwogICAgcmV0dXJuIDA7Cn0K | base64 -d > hello.c
-        gcc -Wall -Wextra -arch x86_64 -arch arm64e hello.c -o hello
-        lipo hello -verify_arch x86_64 arm64e
-        file -b hello
-        ./hello
         popd
 
