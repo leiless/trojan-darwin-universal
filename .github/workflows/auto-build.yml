@@ -44,6 +44,7 @@ jobs:
         fi
 
         mkdir /tmp/trojan-darwin-universal
+
         pushd /tmp/trojan-darwin-universal
         curl -4sL https://formulae.brew.sh/api/formula/openssl@1.1.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget -q
         mkdir openssl_x86_64 openssl_arm64
@@ -60,6 +61,8 @@ jobs:
         ls -1 boost*.tar.gz | grep -v arm64 | xargs -I{} tar xf '{}' -C boost_x86_64
         set -f
 
+        tree -L 4
+
         expand_path() {
           set +f
           ls -1d "$1"
@@ -67,7 +70,7 @@ jobs:
         }
 
         VER=$(curl -sL https://api.github.com/repos/trojan-gfw/trojan/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
-        wget https://github.com/trojan-gfw/trojan/archive/$VER.tar.gz
+        wget -q https://github.com/trojan-gfw/trojan/archive/$VER.tar.gz
         tar xf $VER.tar.gz
         pushd trojan-$(echo $VER | tr -d 'v')
         OPENSSL_ROOT_DIR=$(expand_path $PWD/../openssl_x86_64/*/*)
@@ -75,7 +78,6 @@ jobs:
         cmake -DENABLE_MYSQL=OFF -DSYSTEMD_SERVICE=OFF -DBoost_USE_STATIC_LIBS=ON -DOPENSSL_USE_STATIC_LIBS=ON -DOPENSSL_ROOT_DIR=$OPENSSL_ROOT_DIR -DBoost_INCLUDE_DIR=$BOOST_INCLUDE_DIR -DDEFAULT_CONFIG=config.json .
         popd
 
-        tree -L 4
         popd
 
 
