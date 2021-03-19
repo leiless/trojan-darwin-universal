@@ -60,13 +60,19 @@ jobs:
         ls -1 boost*.tar.gz | grep -v arm64 | xargs -I{} tar xf '{}' -C boost_x86_64
         set -f
 
+        expand_path() {
+          set +f
+          ls -1d "$1"
+          set -f
+        }
+
         VER=$(curl -sL https://api.github.com/repos/trojan-gfw/trojan/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
         wget https://github.com/trojan-gfw/trojan/archive/$VER.tar.gz
         tar xf $VER.tar.gz
         pushd trojan-$(echo $VER | tr -d 'v')
-        set +f
-        cmake -DENABLE_MYSQL=OFF -DSYSTEMD_SERVICE=OFF -DBoost_USE_STATIC_LIBS=ON -DOPENSSL_USE_STATIC_LIBS=ON -DOPENSSL_ROOT_DIR=$PWD/../openssl_x86_64/*/*/ -DBoost_INCLUDE_DIR=$PWD/../boost_x86_64/*/*/include -DDEFAULT_CONFIG=config.json .
-        set -f
+        OPENSSL_ROOT_DIR=$(expand_path $PWD/../openssl_x86_64/*/*)
+        BOOST_INCLUDE_DIR=$(expand_path $PWD/../boost_x86_64/*/*/include)
+        cmake -DENABLE_MYSQL=OFF -DSYSTEMD_SERVICE=OFF -DBoost_USE_STATIC_LIBS=ON -DOPENSSL_USE_STATIC_LIBS=ON -DOPENSSL_ROOT_DIR=$OPENSSL_ROOT_DIR -DBoost_INCLUDE_DIR=$BOOST_INCLUDE_DIR -DDEFAULT_CONFIG=config.json .
         popd
 
         tree -L 4
