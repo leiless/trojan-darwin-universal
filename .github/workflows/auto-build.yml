@@ -63,18 +63,14 @@ jobs:
 
         tree -L 4
 
-        expand_path() {
-          set +f
-          ls -1d "$1"
-          set -f
-        }
-
         VER=$(curl -sL https://api.github.com/repos/trojan-gfw/trojan/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
         wget -q https://github.com/trojan-gfw/trojan/archive/$VER.tar.gz
         tar xf $VER.tar.gz
         pushd trojan-$(echo $VER | tr -d 'v')
-        OPENSSL_ROOT_DIR=$(expand_path $PWD/../openssl_x86_64/*/*)
-        BOOST_INCLUDE_DIR=$(expand_path $PWD/../boost_x86_64/*/*/include)
+        set +f
+        OPENSSL_ROOT_DIR=$(readlink -f "$(ls -1d $PWD/../openssl_x86_64/*/*)")
+        BOOST_INCLUDE_DIR=$(readlink -f "$(ls -1d $PWD/../boost_x86_64/*/*/include)")
+        set -f
         cmake -DENABLE_MYSQL=OFF -DSYSTEMD_SERVICE=OFF -DBoost_USE_STATIC_LIBS=ON -DOPENSSL_USE_STATIC_LIBS=ON -DOPENSSL_ROOT_DIR=$OPENSSL_ROOT_DIR -DBoost_INCLUDE_DIR=$BOOST_INCLUDE_DIR -DDEFAULT_CONFIG=config.json .
         popd
 
