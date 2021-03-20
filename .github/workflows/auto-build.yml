@@ -43,9 +43,12 @@ jobs:
           popd
         fi
 
-        mkdir /tmp/trojan-darwin-universal
+        WORKDIR=/trojan
+        sudo mkdir $WORKDIR
+        sudo chown $(whoami):staff $WORKDIR
+        chmod 755 $WORKDIR
 
-        pushd /tmp/trojan-darwin-universal
+        pushd $WORKDIR
         curl -4sL https://formulae.brew.sh/api/formula/openssl@1.1.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget -q
         mkdir openssl_x86_64 openssl_arm64
         set +f
@@ -72,6 +75,9 @@ jobs:
         BOOST_INCLUDE_DIR=$(realpath "$(ls -1d $PWD/../boost_x86_64/*/*/include)")
         set -f
         cmake -DENABLE_MYSQL=OFF -DSYSTEMD_SERVICE=OFF -DBoost_USE_STATIC_LIBS=ON -DOPENSSL_USE_STATIC_LIBS=ON -DOPENSSL_ROOT_DIR=$OPENSSL_ROOT_DIR -DBoost_INCLUDE_DIR=$BOOST_INCLUDE_DIR -DDEFAULT_CONFIG=config.json .
+        make -j $(nproc)
+        trojan -v
+        file -b trojan
         popd
 
         popd
