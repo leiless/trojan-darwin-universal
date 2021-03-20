@@ -92,7 +92,8 @@ jobs:
             -DDEFAULT_CONFIG=config.json \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 -DCMAKE_OSX_ARCHITECTURES='x86_64;arm64;arm64e' \
             .
-        make -j $(nproc) 2> /dev/null
+        #make -j $(nproc) 2> /dev/null
+        make -j $(nproc)
         lipo ./trojan -verify_arch x86_64 arm64 arm64e
         ./trojan -v
         ls -l ./trojan
