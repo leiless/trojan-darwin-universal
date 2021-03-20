@@ -1,6 +1,9 @@
 # trojan-darwin-universal
 
-macOS universal build of [trojan-gfw/trojan](https://github.com/trojan-gfw/trojan)
+![Build status](https://github.com/leiless/trojan-darwin-universal/actions/workflows/staging.yml/badge.svg)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+Feel solid to use macOS universal build of [trojan-gfw/trojan](https://github.com/trojan-gfw/trojan) in your Apple Silicon based Mac.
 
 ## Caveats
 
