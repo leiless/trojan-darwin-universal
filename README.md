@@ -26,7 +26,7 @@ Feel solid to use macOS universal [trojan-gfw/trojan](https://github.com/trojan-
 
 * Add a Homebrew Formula file.
 
-* Use `macos-11.0` runner image in GitHub Actions when it's officially released.
+* Use `macos-11.0` runner image in GitHub Actions when it's general available.
 
   see: [macOS 11.0 pools will be transited to private preview. #2486](https://github.com/actions/virtual-environments/issues/2486)
 
