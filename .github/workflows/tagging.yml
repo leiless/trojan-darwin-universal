@@ -1,4 +1,4 @@
-name: Staging trojan-gfw build
+name: trojan-gfw release build
 
 on:
   push:
@@ -7,12 +7,31 @@ on:
     branches: [ main ]
 
 jobs:
+  # see: https://github.com/actions/create-release
+  create-release:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          prerelease: true
+
   build-on-darwin:
     name: Build on Darwin
+    needs: create-release
     runs-on: macos-latest
     steps:
 
     - name: Setup build environment
+      id: setup-build-env
       run: |
         set -eufx
         cd
@@ -112,5 +131,28 @@ jobs:
         cat $RELDIR.zip.shasum256
         ls -l
 
+        ZIP_FILE=$PWD/$RELDIR.zip
+        ZIP_FILENAME=$(basename $ZIP_FILE)
+        SHASUM_FILE=$ZIP_FILE.shasum256
+        SHASUM_FILENAME=$(basename $SHASUM_FILE)
+        echo "::set-output name=ZIP_FILE::$ZIP_FILE"
+        echo "::set-output name=ZIP_FILENAME::$ZIP_FILENAME"
+        echo "::set-output name=SHASUM_FILE::$SHASUM_FILE"
+        echo "::set-output name=SHASUM_FILENAME::$SHASUM_FILENAME"
+
         popd # $WORKDIR
+
+    # see:
+    #   https://github.com/actions/upload-release-asset
+    #   htps://github.com/marketplace/actions/upload-a-release-asset
+    - name: Upload ${{ steps.setup-build-env.outputs.ZIP_FILENAME }}
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ${{ steps.setup-build-env.outputs.ZIP_FILE }}
+        asset_name: ${{ steps.setup-build-env.outputs.ZIP_FILENAME }}
+        asset_content_type: application/zip
+
 
