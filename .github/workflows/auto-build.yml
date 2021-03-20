@@ -62,6 +62,8 @@ jobs:
         ls -1 boost*.tar.gz | grep -v arm64 | xargs -I{} tar xf '{}' -C boost_x86_64
         set -f
 
+        tree -L 4
+
         set +f
         OPENSSL_X64_ROOT=$(realpath "$(ls -1d $PWD/openssl_x86_64/*/*)")
         OPENSSL_ARM64_ROOT=$(realpath "$(ls -1d $PWD/openssl_arm64/*/*)")
@@ -85,12 +87,13 @@ jobs:
             -DDEFAULT_CONFIG=config.json \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 -DCMAKE_OSX_ARCHITECTURES='x86_64;arm64' \
             .
-        make -j $(nproc)
+        make -j $(nproc) 2> /dev/null
         ./trojan -v
         file -b ./trojan
+        otool -L ./trojan
+        otool -l ./trojan | grep LC_VERSION_MIN_MACOSX -B1 -A3
+        otool -l trojan | grep LC_UUID -B1 -A2
         popd
-
-        tree -L 4
 
         popd
 
