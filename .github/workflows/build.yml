@@ -130,8 +130,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: startsWith(github.ref, 'refs/tags/')
       with:
+        prerelease: true
         files: |
           ${{ steps.build-script.outputs.ZIP_FILE }}
           ${{ steps.build-script.outputs.SHASUM_FILE }}
-      prerelease: true
 
