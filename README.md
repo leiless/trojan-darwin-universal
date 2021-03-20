@@ -11,6 +11,7 @@ Feel solid to use macOS universal [trojan-gfw/trojan](https://github.com/trojan-
 * This universal `trojan-gfw` binary is not [notarized](https://developer.apple.com/documentation/xcode/notarizing_macos_software_before_distribution), please remove the quarantine extended attribute before use:
 
   ```bash
+  # Prepend `sudo` if you met permission denied error
   xattr -r com.apple.quarantine trojan-$VER-darwin.zip
   ```
 
