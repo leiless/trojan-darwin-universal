@@ -10,6 +10,10 @@ macOS universal build of [trojan-gfw/trojan](https://github.com/trojan-gfw/troja
   xattr -r com.apple.quarantine trojan-$VER-darwin.zip
   ```
 
+* This is not an official build, and provides no any warranty and support.
+
+  Please visit [trojan-gfw/trojan/issues](https://github.com/trojan-gfw/trojan/issues) if you found anything wrong.
+
 ## TODO
 
 * Add a Homebrew Formula file.
