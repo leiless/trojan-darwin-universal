@@ -80,8 +80,7 @@ jobs:
         F=lib/libboost_system-mt.a && lipo -create $BOOST_X64_ROOT/$F $BOOST_ARM64_ROOT/$F -output $BOOST_X64_ROOT/$F
         F=lib/libboost_program_options-mt.a && lipo -create $BOOST_X64_ROOT/$F $BOOST_ARM64_ROOT/$F -output $BOOST_X64_ROOT/$F
 
-        # TODO: Remove fallback version
-        VER1=$(curl -4sL https://api.github.com/repos/trojan-gfw/trojan/releases/latest | grep '"tag_name":' | cut -d'"' -f4 || echo v1.16.0)
+        VER1=$(curl -4sL https://api.github.com/repos/trojan-gfw/trojan/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
         VER2=$(echo $VER1 | tr -d 'v')
         wget -q https://github.com/trojan-gfw/trojan/archive/$VER1.tar.gz
         tar xf $VER1.tar.gz
