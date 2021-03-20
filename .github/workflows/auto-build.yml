@@ -69,6 +69,11 @@ jobs:
         BOOST_ARM64_ROOT=$(realpath "$(ls -1d $PWD/boost_arm64/*/*)")
         set -f
 
+        F=lib/libssl.a && lipo -create $OPENSSL_X64_ROOT/$F $OPENSSL_ARM64_ROOT/$F -output $(basename $F)
+        F=lib/libcrypto.a && lipo -create $OPENSSL_X64_ROOT/$F $OPENSSL_ARM64_ROOT/$F -output $(basename $F)
+        F=lib/libboost_system-mt.a && lipo -create $BOOST_X64_ROOT/$F $BOOST_ARM64_ROOT/$F -output $(basename $F)
+        F=lib/libboost_program_options-mt.a && lipo -create $BOOST_X64_ROOT/$F $BOOST_ARM64_ROOT/$F -output $(basename $F)
+
         tree -L 4
 
         # [TODO] [DEBUG] Remove fallback version
