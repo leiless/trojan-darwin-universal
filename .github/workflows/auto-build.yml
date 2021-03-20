@@ -47,16 +47,16 @@ jobs:
         mkdir $WORKDIR
 
         pushd $WORKDIR
+
         curl -4sL https://formulae.brew.sh/api/formula/openssl@1.1.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget -q
         mkdir openssl_x86_64 openssl_arm64
         set +f
         ls -1 openssl*.tar.gz | grep arm64 | xargs -I{} tar xf '{}' -C openssl_arm64
         ls -1 openssl*.tar.gz | grep -v arm64 | xargs -I{} tar xf '{}' -C openssl_x86_64
-
         set -f
+
         curl -4sL https://formulae.brew.sh/api/formula/boost.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget -q
         mkdir boost_x86_64 boost_arm64
-
         set +f
         ls -1 boost*.tar.gz | grep arm64 | xargs -I{} tar xf '{}' -C boost_arm64
         ls -1 boost*.tar.gz | grep -v arm64 | xargs -I{} tar xf '{}' -C boost_x86_64
@@ -64,7 +64,8 @@ jobs:
 
         tree -L 4
 
-        VER=$(curl -4sL https://api.github.com/repos/trojan-gfw/trojan/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
+        # [TODO] [DEBUG] Remove fallback version
+        VER=$(curl -4sL https://api.github.com/repos/trojan-gfw/trojan/releases/latest | grep '"tag_name":' | cut -d'"' -f4 || echo v1.16.0)
         wget -q https://github.com/trojan-gfw/trojan/archive/$VER.tar.gz
         tar xf $VER.tar.gz
         pushd trojan-$(echo $VER | tr -d 'v')
