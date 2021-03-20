@@ -74,18 +74,23 @@ jobs:
         F=lib/libboost_system-mt.a && lipo -create $BOOST_X64_ROOT/$F $BOOST_ARM64_ROOT/$F -output $BOOST_X64_ROOT/$F
         F=lib/libboost_program_options-mt.a && lipo -create $BOOST_X64_ROOT/$F $BOOST_ARM64_ROOT/$F -output $BOOST_X64_ROOT/$F
 
-        tree -L 4
-
         # [TODO] [DEBUG] Remove fallback version
         VER=$(curl -4sL https://api.github.com/repos/trojan-gfw/trojan/releases/latest | grep '"tag_name":' | cut -d'"' -f4 || echo v1.16.0)
         wget -q https://github.com/trojan-gfw/trojan/archive/$VER.tar.gz
         tar xf $VER.tar.gz
         pushd trojan-$(echo $VER | tr -d 'v')
-        cmake -DENABLE_MYSQL=OFF -DSYSTEMD_SERVICE=OFF -DOPENSSL_USE_STATIC_LIBS=ON -DOPENSSL_ROOT_DIR=$OPENSSL_X64_ROOT -DBoost_USE_STATIC_LIBS=ON -DBoost_INCLUDE_DIR=$BOOST_X64_ROOT/include -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 -DDEFAULT_CONFIG=config.json .
+        cmake -DENABLE_MYSQL=OFF -DSYSTEMD_SERVICE=OFF \
+            -DOPENSSL_USE_STATIC_LIBS=ON -DOPENSSL_ROOT_DIR=$OPENSSL_X64_ROOT \
+            -DBoost_USE_STATIC_LIBS=ON -DBoost_INCLUDE_DIR=$BOOST_X64_ROOT/include \
+            -DDEFAULT_CONFIG=config.json \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 -DCMAKE_OSX_ARCHITECTURES='x86_64 arm64' \
+            .
         make -j $(nproc)
         ./trojan -v
         file -b ./trojan
         popd
+
+        tree -L 4
 
         popd
 
