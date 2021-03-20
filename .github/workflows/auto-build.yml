@@ -31,7 +31,7 @@ jobs:
 
         command -v cmake make > /dev/null
 
-        brew install tree
+        brew install tree coreutils
 
         # Hack macOS 10.x to allow arm64* build support
         if [ "$(sw_vers -productVersion | cut -d'.' -f1)" = 10 ]; then
