@@ -1,6 +1,6 @@
 # trojan-darwin-universal
 
-[![Build status](https://github.com/leiless/trojan-darwin-universal/actions/workflows/build.yml/badge.svg)](https://github.com/leiless/trojan-darwin-universal/actions)
+[![Build status](https://github.com/leiless/trojan-darwin-universal/actions/workflows/build.yml/badge.svg)](https://github.com/leiless/trojan-darwin-universal/actions/workflows/build.yml)
 ![Apple Silicon ready](https://img.shields.io/badge/Apple%20Silicon-ready-33cc00)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
