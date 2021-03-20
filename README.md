@@ -1,6 +1,6 @@
 # trojan-darwin-universal
 
-macOS universal build of [trojan-gfw/trojan`](https://github.com/trojan-gfw/trojan)
+macOS universal build of [trojan-gfw/trojan](https://github.com/trojan-gfw/trojan)
 
 ## Caveats
 
