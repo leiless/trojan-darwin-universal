@@ -43,10 +43,8 @@ jobs:
           popd
         fi
 
-        WORKDIR=/trojan
-        sudo mkdir $WORKDIR
-        sudo chown $(whoami):staff $WORKDIR
-        chmod 755 $WORKDIR
+        WORKDIR=/tmp/_
+        mkdir $WORKDIR
 
         pushd $WORKDIR
         curl -4sL https://formulae.brew.sh/api/formula/openssl@1.1.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget -q
