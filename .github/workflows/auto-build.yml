@@ -99,10 +99,10 @@ jobs:
         otool -l ./trojan | grep LC_UUID -B1 -A2
         popd
 
-        RELDIR=$(trojan-$VER1-darwin)
         wget -q https://github.com/trojan-gfw/trojan/releases/download/$VER1/trojan-$VER2-macos.zip
         unzip -q trojan-$VER2-macos.zip
-        mv trojan/ $RELDIR
+        RELDIR=trojan-$VER1-darwin
+        mv trojan $RELDIR
         cp $DIR/trojan $RELDIR/trojan
         tree $RELDIR
         zip -qr9 $RELDIR.zip $RELDIR
