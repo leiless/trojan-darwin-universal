@@ -4,7 +4,7 @@
 ![Apple Silicon ready](https://img.shields.io/badge/Apple%20Silicon-ready-33cc00)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-Feel solid to use macOS universal build of [trojan-gfw/trojan](https://github.com/trojan-gfw/trojan) in your Apple Silicon based Mac.
+Feel solid to use macOS universal [trojan-gfw/trojan](https://github.com/trojan-gfw/trojan) in your Apple Silicon based Mac.
 
 ## Caveats
 
