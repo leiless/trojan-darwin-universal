@@ -19,15 +19,17 @@ jobs:
     - name: Setup build environment
       run: |
         set -eufx
-        #echo $0
-        #whoami
-        #sysctl -n machdep.cpu.brand_string
-        #sysctl -n hw.ncpu
-        #sw_vers
-        #uname -a
-        #xcode-select -p
-        #xcodebuild -version
-        #brew -v
+        echo $0
+        whoami
+        sysctl -n hw.model
+        sysctl -n hw.ncpu
+        sysctl -w hw.memsize
+        sysctl -n machdep.cpu.brand_string
+        sw_vers
+        uname -a
+        xcode-select -p
+        xcodebuild -version
+        brew -v
 
         command -v cmake make > /dev/null
 
