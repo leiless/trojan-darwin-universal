@@ -92,7 +92,7 @@ jobs:
             .
         make -j $(nproc) 2> /dev/null
         ./trojan -v
-        ls -lh ./trojan
+        ls -l ./trojan
         file -b ./trojan
         otool -L ./trojan
         otool -l ./trojan | grep LC_VERSION_MIN_MACOSX -B1 -A3
@@ -107,6 +107,7 @@ jobs:
         tree $RELDIR
         zip -qr9 $RELDIR.zip $RELDIR
         shasum -a 256 $RELDIR.zip > $RELDIR.zip.shasum256
+        shasum -c $RELDIR.zip.shasum256
         cat $RELDIR.zip.shasum256
         ls -l
 
