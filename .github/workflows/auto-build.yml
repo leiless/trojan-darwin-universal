@@ -20,7 +20,6 @@ jobs:
       run: |
         set -eufx
         cd
-        echo $0
         whoami
         sysctl -n hw.model
         sysctl -n hw.ncpu
@@ -98,22 +97,23 @@ jobs:
         ls -l ./trojan
         file -b ./trojan
         otool -L ./trojan
-        otool -l ./trojan | grep LC_VERSION_MIN_MACOSX -B1 -A3
         otool -l ./trojan | grep LC_UUID -B1 -A2
+        otool -l ./trojan | grep LC_VERSION_MIN_MACOSX -B1 -A3
         popd
 
         wget -q https://github.com/trojan-gfw/trojan/releases/download/$VER1/trojan-$VER2-macos.zip
         unzip -q trojan-$VER2-macos.zip
+        rm trojan-$VER2-macos.zip
         RELDIR=trojan-$VER1-darwin
         mv trojan $RELDIR
         cp $DIR/trojan $RELDIR/trojan
         tree $RELDIR
         zip -qr9 $RELDIR.zip $RELDIR
+        rm -r $RELDIR
         shasum -a 256 $RELDIR.zip > $RELDIR.zip.shasum256
         shasum -c $RELDIR.zip.shasum256
         cat $RELDIR.zip.shasum256
         ls -l
 
-        popd
-
+        popd # $WORKDIR
 
