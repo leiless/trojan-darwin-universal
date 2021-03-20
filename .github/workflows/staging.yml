@@ -1,4 +1,4 @@
-name: macOS trojan-gfw auto build
+name: Staging trojan-gfw build
 
 on:
   push:
