@@ -14,6 +14,10 @@ macOS universal build of [trojan-gfw/trojan](https://github.com/trojan-gfw/troja
 
   Please visit [trojan-gfw/trojan/issues](https://github.com/trojan-gfw/trojan/issues) if you found anything wrong.
 
+* This repository will be archived eventually since Apple will cease Intel Mac product line.
+
+  In which case, there will only one arch binary. i.e. `arm64[e]`
+
 ## TODO
 
 * Add a Homebrew Formula file.
