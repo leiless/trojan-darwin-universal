@@ -63,10 +63,10 @@ jobs:
         set -f
 
         set +f
-        OPENSSL_X64_ROOT=$(realpath "$(ls -1d $PWD/../openssl_x86_64/*/*)")
-        OPENSSL_ARM64_ROOT=$(realpath "$(ls -1d $PWD/../openssl_arm64/*/*)")
-        BOOST_X64_ROOT=$(realpath "$(ls -1d $PWD/../boost_x86_64/*/*)
-        BOOST_ARM64_ROOT=$(realpath "$(ls -1d $PWD/../boost_arm64/*/*)
+        OPENSSL_X64_ROOT=$(realpath "$(ls -1d $PWD/openssl_x86_64/*/*)")
+        OPENSSL_ARM64_ROOT=$(realpath "$(ls -1d $PWD/openssl_arm64/*/*)")
+        BOOST_X64_ROOT=$(realpath "$(ls -1d $PWD/boost_x86_64/*/*)
+        BOOST_ARM64_ROOT=$(realpath "$(ls -1d $PWD/boost_arm64/*/*)
         set -f
 
         tree -L 4
