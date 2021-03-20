@@ -1,0 +1,116 @@
+name: Staging trojan-gfw build
+
+on:
+  push:
+    tags: v*
+  workflow_dispatch:
+    branches: [ main ]
+
+jobs:
+  build-on-darwin:
+    name: Build on Darwin
+    runs-on: macos-latest
+    steps:
+
+    - name: Setup build environment
+      run: |
+        set -eufx
+        cd
+        whoami
+        sysctl -n hw.model
+        sysctl -n hw.ncpu
+        sysctl -n hw.memsize
+        sysctl -n machdep.cpu.brand_string
+        sw_vers
+        uname -a
+        xcode-select -p
+        xcodebuild -version
+        brew -v
+
+        command -v cmake make > /dev/null
+
+        brew install tree coreutils
+
+        # Hack macOS 10.x to allow arm64* build support
+        if [ "$(sw_vers -productVersion | cut -d'.' -f1)" = 10 ]; then
+          pushd /Library/Developer/CommandLineTools/SDKs
+          sudo rm MacOSX.sdk
+          sudo ln -s MacOSX11.1.sdk MacOSX.sdk
+          sudo rm -rf MacOSX10.15.sdk
+          ls -l
+          popd
+        fi
+
+        WORKDIR=/tmp/_
+        mkdir $WORKDIR
+
+        pushd $WORKDIR
+
+        curl -4sL https://formulae.brew.sh/api/formula/openssl@1.1.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget -q
+        mkdir openssl_x86_64 openssl_arm64
+        set +f
+        ls -1 openssl*.tar.gz | grep arm64 | xargs -I{} tar xf '{}' -C openssl_arm64
+        ls -1 openssl*.tar.gz | grep -v arm64 | xargs -I{} tar xf '{}' -C openssl_x86_64
+        set -f
+
+        curl -4sL https://formulae.brew.sh/api/formula/boost.json | python3 -m json.tool | grep '"url":' | grep 'big_sur\.' | cut -d'"' -f4 | sort -V | tail -2 | xargs wget -q
+        mkdir boost_x86_64 boost_arm64
+        set +f
+        ls -1 boost*.tar.gz | grep arm64 | xargs -I{} tar xf '{}' -C boost_arm64
+        ls -1 boost*.tar.gz | grep -v arm64 | xargs -I{} tar xf '{}' -C boost_x86_64
+        set -f
+
+        tree -L 4
+
+        set +f
+        OPENSSL_X64_ROOT=$(realpath "$(ls -1d $PWD/openssl_x86_64/*/*)")
+        OPENSSL_ARM64_ROOT=$(realpath "$(ls -1d $PWD/openssl_arm64/*/*)")
+        BOOST_X64_ROOT=$(realpath "$(ls -1d $PWD/boost_x86_64/*/*)")
+        BOOST_ARM64_ROOT=$(realpath "$(ls -1d $PWD/boost_arm64/*/*)")
+        set -f
+
+        F=lib/libssl.a && lipo -create $OPENSSL_X64_ROOT/$F $OPENSSL_ARM64_ROOT/$F -output $OPENSSL_X64_ROOT/$F
+        F=lib/libcrypto.a && lipo -create $OPENSSL_X64_ROOT/$F $OPENSSL_ARM64_ROOT/$F -output $OPENSSL_X64_ROOT/$F
+        F=lib/libboost_system-mt.a && lipo -create $BOOST_X64_ROOT/$F $BOOST_ARM64_ROOT/$F -output $BOOST_X64_ROOT/$F
+        F=lib/libboost_program_options-mt.a && lipo -create $BOOST_X64_ROOT/$F $BOOST_ARM64_ROOT/$F -output $BOOST_X64_ROOT/$F
+
+        # [TODO] [DEBUG] Remove fallback version
+        VER1=$(curl -4sL https://api.github.com/repos/trojan-gfw/trojan/releases/latest | grep '"tag_name":' | cut -d'"' -f4 || echo v1.16.0)
+        VER2=$(echo $VER1 | tr -d 'v')
+        wget -q https://github.com/trojan-gfw/trojan/archive/$VER1.tar.gz
+        tar xf $VER1.tar.gz
+
+        DIR=trojan-$VER2
+        pushd $DIR
+        cmake -DENABLE_MYSQL=OFF -DSYSTEMD_SERVICE=OFF \
+            -DOPENSSL_USE_STATIC_LIBS=ON -DOPENSSL_ROOT_DIR=$OPENSSL_X64_ROOT \
+            -DBoost_USE_STATIC_LIBS=ON -DBoost_INCLUDE_DIR=$BOOST_X64_ROOT/include \
+            -DDEFAULT_CONFIG=config.json \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 -DCMAKE_OSX_ARCHITECTURES='x86_64;arm64' \
+            .
+        make -j $(nproc) 2> /dev/null
+        lipo ./trojan -verify_arch x86_64 arm64
+        ./trojan -v
+        ls -l ./trojan
+        file -b ./trojan
+        otool -L ./trojan
+        otool -l ./trojan | grep LC_UUID -B1 -A2
+        otool -l ./trojan | grep LC_VERSION_MIN_MACOSX -B1 -A3
+        popd
+
+        wget -q https://github.com/trojan-gfw/trojan/releases/download/$VER1/trojan-$VER2-macos.zip
+        unzip -q trojan-$VER2-macos.zip
+        rm trojan-$VER2-macos.zip
+        RELDIR=trojan-$VER1-darwin
+        mv trojan $RELDIR
+        cp $DIR/trojan $RELDIR/trojan
+        tree $RELDIR
+        zip -qr9 $RELDIR.zip $RELDIR
+        rm -r $RELDIR
+        shasum -a 256 $RELDIR.zip > $RELDIR.zip.shasum256
+        shasum -c $RELDIR.zip.shasum256
+        cat $RELDIR.zip.shasum256
+        ls -l
+
+        popd # $WORKDIR
+
