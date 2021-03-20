@@ -15,7 +15,7 @@ jobs:
     name: Build on Darwin
     runs-on: macos-latest
     steps:
-    - name: Build script
+    - name: Run build script
       id: build-script
       run: |
         set -eufx
@@ -78,7 +78,7 @@ jobs:
         F=lib/libboost_system-mt.a && lipo -create $BOOST_X64_ROOT/$F $BOOST_ARM64_ROOT/$F -output $BOOST_X64_ROOT/$F
         F=lib/libboost_program_options-mt.a && lipo -create $BOOST_X64_ROOT/$F $BOOST_ARM64_ROOT/$F -output $BOOST_X64_ROOT/$F
 
-        # [TODO] [DEBUG] Remove fallback version
+        # TODO: Remove fallback version
         VER1=$(curl -4sL https://api.github.com/repos/trojan-gfw/trojan/releases/latest | grep '"tag_name":' | cut -d'"' -f4 || echo v1.16.0)
         VER2=$(echo $VER1 | tr -d 'v')
         wget -q https://github.com/trojan-gfw/trojan/archive/$VER1.tar.gz
@@ -132,5 +132,4 @@ jobs:
         files: |
           ${{ steps.build-script.outputs.ZIP_FILE }}
           ${{ steps.build-script.outputs.SHASUM_FILE }}
-
 
