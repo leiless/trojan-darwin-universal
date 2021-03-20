@@ -77,10 +77,13 @@ jobs:
         F=lib/libboost_program_options-mt.a && lipo -create $BOOST_X64_ROOT/$F $BOOST_ARM64_ROOT/$F -output $BOOST_X64_ROOT/$F
 
         # [TODO] [DEBUG] Remove fallback version
-        VER=$(curl -4sL https://api.github.com/repos/trojan-gfw/trojan/releases/latest | grep '"tag_name":' | cut -d'"' -f4 || echo v1.16.0)
-        wget -q https://github.com/trojan-gfw/trojan/archive/$VER.tar.gz
-        tar xf $VER.tar.gz
-        pushd trojan-$(echo $VER | tr -d 'v')
+        VER1=$(curl -4sL https://api.github.com/repos/trojan-gfw/trojan/releases/latest | grep '"tag_name":' | cut -d'"' -f4 || echo v1.16.0)
+        VER2=$(echo $VER1 | tr -d 'v')
+        wget -q https://github.com/trojan-gfw/trojan/archive/$VER1.tar.gz
+        tar xf $VER1.tar.gz
+
+        DIR=trojan-$VER2
+        pushd $DIR
         cmake -DENABLE_MYSQL=OFF -DSYSTEMD_SERVICE=OFF \
             -DOPENSSL_USE_STATIC_LIBS=ON -DOPENSSL_ROOT_DIR=$OPENSSL_X64_ROOT \
             -DBoost_USE_STATIC_LIBS=ON -DBoost_INCLUDE_DIR=$BOOST_X64_ROOT/include \
@@ -89,11 +92,23 @@ jobs:
             .
         make -j $(nproc) 2> /dev/null
         ./trojan -v
+        ls -lh ./trojan
         file -b ./trojan
         otool -L ./trojan
         otool -l ./trojan | grep LC_VERSION_MIN_MACOSX -B1 -A3
-        otool -l trojan | grep LC_UUID -B1 -A2
+        otool -l ./trojan | grep LC_UUID -B1 -A2
         popd
+
+        RELDIR=$(trojan-$VER1-darwin)
+        wget -q https://github.com/trojan-gfw/trojan/releases/download/$VER1/trojan-$VER2-macos.zip
+        unzip -q trojan-$VER2-macos.zip
+        mv trojan/ $RELDIR
+        cp $DIR/trojan $RELDIR/trojan
+        tree $RELDIR
+        zip -qr9 $RELDIR.zip $RELDIR
+        shasum -a 256 $RELDIR.zip > $RELDIR.zip.shasum256
+        cat $RELDIR.zip.shasum256
+        ls -l
 
         popd
 
