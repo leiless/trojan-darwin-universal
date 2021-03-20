@@ -19,11 +19,12 @@ jobs:
     - name: Setup build environment
       run: |
         set -eufx
+        cd
         echo $0
         whoami
         sysctl -n hw.model
         sysctl -n hw.ncpu
-        sysctl -w hw.memsize
+        sysctl -n hw.memsize
         sysctl -n machdep.cpu.brand_string
         sw_vers
         uname -a
