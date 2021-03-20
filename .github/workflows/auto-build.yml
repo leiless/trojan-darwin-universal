@@ -93,6 +93,7 @@ jobs:
             -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 -DCMAKE_OSX_ARCHITECTURES='x86_64;arm64' \
             .
         make -j $(nproc) 2> /dev/null
+        lipo ./trojan -verify_arch x86_64 arm64
         ./trojan -v
         ls -l ./trojan
         file -b ./trojan
