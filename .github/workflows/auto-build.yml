@@ -83,7 +83,7 @@ jobs:
             -DOPENSSL_USE_STATIC_LIBS=ON -DOPENSSL_ROOT_DIR=$OPENSSL_X64_ROOT \
             -DBoost_USE_STATIC_LIBS=ON -DBoost_INCLUDE_DIR=$BOOST_X64_ROOT/include \
             -DDEFAULT_CONFIG=config.json \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 -DCMAKE_OSX_ARCHITECTURES='x86_64 arm64' \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 -DCMAKE_OSX_ARCHITECTURES='x86_64;arm64' \
             .
         make -j $(nproc)
         ./trojan -v
