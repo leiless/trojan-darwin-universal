@@ -123,6 +123,7 @@ jobs:
 
         popd # $WORKDIR
 
+    # https://github.com/softprops/action-gh-release
     - name: Create release
       uses: softprops/action-gh-release@v1
       env:
@@ -132,4 +133,5 @@ jobs:
         files: |
           ${{ steps.build-script.outputs.ZIP_FILE }}
           ${{ steps.build-script.outputs.SHASUM_FILE }}
+      prerelease: true
 
