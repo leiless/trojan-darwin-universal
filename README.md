@@ -31,3 +31,6 @@ Feel solid to use macOS universal [trojan-gfw/trojan](https://github.com/trojan-
 
   see: [macOS 11.0 pools will be transited to private preview. #2486](https://github.com/actions/virtual-environments/issues/2486)
 
+## Reference
+
+[[Misc] Made a universal trojan build for macOS #579](https://github.com/trojan-gfw/trojan/issues/579)
