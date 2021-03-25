@@ -28,7 +28,7 @@ jobs:
         sysctl -n hw.memsize
         sysctl -n machdep.cpu.brand_string
         sw_vers
-        uname -a
+        uname -v
         xcode-select -p
         xcodebuild -version
         brew -v
